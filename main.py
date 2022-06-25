@@ -8,54 +8,52 @@ class Receipe:
         self.name = name
         self.tingr = [] #Один из атрибутов - это список ингридиентов
         self.quant = quant
-    def __str__(self):
-        return self.name
-    __repr__ = __str__
 
-
-class Ingrigient:
-    def __init__(self, ingr_name, ingr_quantity, ingr_measure):
-        self.name = ingr_name
-        self.quantity = ingr_quantity
-        self.mean = ingr_measure
-    def __str__(self):
-        return self.name
-    __repr__ = __str__
-
+tingr = []
 def file_reader(file_name: str) -> dict:
     with open(file_name) as file:
-        receipe = []
-        ingridients = []
-        tingr = []
-        count = 0
+        receipe = [] #Список  объектов класса "Receipe"
+        count = 0 #Счетчик
+        ingridients = [] #Список для ингридиентов
         for line in file:
             name = line.strip() #В переменную сохраняем название рецепта
-            quant = int(file.readline())
+            quant = int(file.readline()) #Количество ингридиентов
+            receipe.append(Receipe(name, quant))  # Создаем элементы класса Receipe и добавляем их в список
             for item in range(quant): #Цикл, который считывает количество строк по количеству ингридиентов
-                n1, n2, n3 = file.readline().split("|") #разбиваем строку на три переменные по разделителю
-                ingr_name = n1.strip(' ')
-                ingr_quantity = float(n2.strip(' '))
-                ingr_measure = n3.strip(' \n')
-                ingridients.append(Ingrigient(ingr_name, ingr_quantity, ingr_measure))
-                tingr.append(ingr_name)
-            receipe.append(Receipe(name, quant))
-            print(name)
-            receipe[count].tingr = tingr #вывод на экран списка ингридиентов
-            print(receipe[count].tingr)
+                d_ingr = {}  # Инициализация словаря для хранения ингридиентов
+                n1, n2, n3 = file.readline().split("|")  # разбиваем строку на три переменные по разделителю
+                d_ingr['ingredient_name'] = n1.strip(' ')
+                d_ingr['quantity'] = n2.strip(' ')
+                d_ingr['measure'] = n3.strip(' \n')  # Вычищаем служебные символы
+                ingridients.append(d_ingr)
+                receipe[count].tingr.append(d_ingr) #Добавялем в список ингридиентов ингридиенты
             count += 1
-            tingr.clear()
             file.readline()
-    allist = [receipe, ingridients]
-    return allist
+            ingridients.clear() #Очистка списка
+    return receipe
 
-receipes = file_reader(file_name)[0]
-print(receipes[1].__dict__) #Проверка содержимого объекта класса
+ingridients = file_reader(file_name)
 
-ingridients = file_reader(file_name)[1]
-print(ingridients[1].__dict__)
+print("Задача №1")
+
+cook_book = {}
+for elements in ingridients:
+    cook_book[elements.name] = elements.tingr
+pprint(cook_book)
 
 
 print('Задание №2')
+dishes = ['Запеченный картофель', 'Омлет']
+person_count = 2
+def get_shop_list_by_dishes(dishes, person_count):
+    lists = {}
+    for items in ingridients:
+        if items.name in dishes:
+            for elements in items.tingr:
+                elements['quantity'] = float(elements['quantity']) * person_count
+                lists[elements.pop('ingredient_name')] = elements
+    return lists
+pprint(get_shop_list_by_dishes(dishes, person_count))
 
 
 print()
