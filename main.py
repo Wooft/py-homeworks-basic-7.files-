@@ -3,56 +3,65 @@ from pprint import pprint
 file_name = "receipes.txt"
 file_name_1 = '3.txt'
 
-class receipe:
-    def __init__(self, name, quani):
-        name = ''
-        qiani = str()
+class Receipe:
+    def __init__(self, name, quant):
+        self.name = name
+        self.tingr = [] #Один из атрибутов - это список ингридиентов
+        self.quant = quant
+    def __str__(self):
+        return self.name
+    __repr__ = __str__
 
-class ingrigient:
-    def __init__(self, name, quantity, mean):
-        name = ''
-        quantity = int()
-        mean = ''
+
+class Ingrigient:
+    def __init__(self, ingr_name, ingr_quantity, ingr_measure):
+        self.name = ingr_name
+        self.quantity = ingr_quantity
+        self.mean = ingr_measure
+    def __str__(self):
+        return self.name
+    __repr__ = __str__
 
 def file_reader(file_name: str) -> dict:
     with open(file_name) as file:
-        cook_book = {}
+        receipe = []
+        ingridients = []
+        tingr = []
+        count = 0
         for line in file:
             name = line.strip() #В переменную сохраняем название рецепта
-            ingridients = []
-            for item in range(int(file.readline())): #Цикл, который считывает количество строк по количеству ингридиентов
-                d_ingr = {} #Инициализация словаря для хранения ингридиентов
+            quant = int(file.readline())
+            for item in range(quant): #Цикл, который считывает количество строк по количеству ингридиентов
                 n1, n2, n3 = file.readline().split("|") #разбиваем строку на три переменные по разделителю
-                d_ingr['ingredient_name'] = n1.strip(' ')
-                d_ingr['quantity'] = n2.strip(' ')
-                d_ingr['measure'] = n3.strip(' \n') #Вычищаем служебные символы
-                ingridients.append(d_ingr)
-            cook_book[name] = ingridients #Ключом словаря делаем название переменной а в значение добавляем список словарей с ингридиентами
-            file.readline() #считываем пустую строку для перехода к следующему рецепту
-    return cook_book
-pprint(file_reader(file_name))
+                ingr_name = n1.strip(' ')
+                ingr_quantity = float(n2.strip(' '))
+                ingr_measure = n3.strip(' \n')
+                ingridients.append(Ingrigient(ingr_name, ingr_quantity, ingr_measure))
+                tingr.append(ingr_name)
+            receipe.append(Receipe(name, quant))
+            print(name)
+            receipe[count].tingr = tingr #вывод на экран списка ингридиентов
+            print(receipe[count].tingr)
+            count += 1
+            tingr.clear()
+            file.readline()
+    allist = [receipe, ingridients]
+    return allist
+
+receipes = file_reader(file_name)[0]
+print(receipes[1].__dict__) #Проверка содержимого объекта класса
+
+ingridients = file_reader(file_name)[1]
+print(ingridients[1].__dict__)
+
 
 print('Задание №2')
 
-dishes = ['Фахитос', 'Шаверма']
-pers_c = 3
-def get_shop_list_by_dishes(dishes, pers_c):
-    res_dict = {}
-    for items in dishes:
-        for keys, values in file_reader(file_name).items():
-            if keys == items:
-              for elements in values:
-                elements['quantity'] = float(elements['quantity']) * pers_c
-                res_dict[elements.pop('ingredient_name')] = elements
-    return res_dict
-
-pprint(get_shop_list_by_dishes(dishes, pers_c))
-
-
-list_of_files = ['1.txt', '2.txt', '3.txt']
 
 print()
 print('Задание №3')
+
+list_of_files = ['1.txt', '2.txt', '3.txt']
 
 def documents_reader(list_of_files) -> dict:
   content = {}
