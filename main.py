@@ -3,6 +3,17 @@ from pprint import pprint
 file_name = "receipes.txt"
 file_name_1 = '3.txt'
 
+class receipe:
+    def __init__(self, name, quani):
+        name = ''
+        qiani = str()
+
+class ingrigient:
+    def __init__(self, name, quantity, mean):
+        name = ''
+        quantity = int()
+        mean = ''
+
 def file_reader(file_name: str) -> dict:
     with open(file_name) as file:
         cook_book = {}
